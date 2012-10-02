@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "looklink.WNET", "looklink.WNET.vcproj", "{0A028847-2323-4B6F-9887-7CFCC3AF9F6F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "looklink.WLH", "looklink.WLH.vcproj", "{311E4268-189D-413F-93ED-DCA5120DD5EC}"

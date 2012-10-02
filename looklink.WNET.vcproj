@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="8.00"
 	Name="looklink.WNET"
 	ProjectGUID="{0A028847-2323-4B6F-9887-7CFCC3AF9F6F}"
 	TargetFrameworkVersion="196613"
