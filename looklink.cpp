@@ -111,6 +111,13 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
         else
         {
             _ftprintf(stderr, _T("ERROR: '%ws' is not a reparse point\n"), rp.Path());
+            if(be_verbose)
+            {
+                if(-1 != rp.FileIndex())
+                {
+                    _ftprintf(stderr, _T("\tFile Index: %I64u (%08X%08X)\n"), rp.FileIndex(), rp.FileIndexHigh(), rp.FileIndexLow());
+                }
+            }
             return 2;
         }
         return 0;
