@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// Written 2009, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN
+/// Written 2009, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN/CC0
 ///
 /// Useful macros
 ///
-/// (File was in the PUBLIC DOMAIN  - Author: ddkwizard.assarbad.net)
+/// (File was in the PUBLIC DOMAIN/CC0  - Author: ddkwizard.assarbad.net)
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef __EXECOMMON_H_VERSION__

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// Written 2009-2010, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN
+/// Written 2009-2010, 2012, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN/CC0
 ///
 /// Original filename: looklink.cpp
 /// Project          : looklink

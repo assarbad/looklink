@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// Written 2009, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN
+/// Written 2009, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN/CC0
 ///
 /// Defines for the version information in the resource file
 ///
-/// (File was in the PUBLIC DOMAIN  - Author: ddkwizard.assarbad.net)
+/// (File was in the PUBLIC DOMAIN/CC0  - Author: ddkwizard.assarbad.net)
 ///////////////////////////////////////////////////////////////////////////////
 
 // 
@@ -33,7 +33,7 @@
 #define TEXT_FILEDESC          Inspects reparse points of all kinds // component description
 #define TEXT_COMPANY           Oliver Schneider (assarbad.net) // company
 #define TEXT_MODULE            looklink // module name
-#define TEXT_COPYRIGHT         Written EXE_YEAR TEXT_COMPANY (PUBLIC DOMAIN) // copyright information
+#define TEXT_COPYRIGHT         Written EXE_YEAR TEXT_COMPANY (PUBLIC DOMAIN/CC0) // copyright information
 #define TEXT_INTERNALNAME      looklink.exe // copyright information
 
 #endif // __EXEVERSION_H_VERSION__
