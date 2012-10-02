@@ -1,5 +1,4 @@
-# $Id$
-!if $(386)
+# !if $(386)
 TARGETNAME=looklink32
 !elseif $(AMD64)
 TARGETNAME=looklink64

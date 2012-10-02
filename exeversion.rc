@@ -7,8 +7,7 @@
 /// (File was in the PUBLIC DOMAIN  - Author: ddkwizard.assarbad.net)
 ///////////////////////////////////////////////////////////////////////////////
 
-// $Id: exeversion.rc 11 2009-02-03 01:50:55Z oliver $
-
+// 
 #include <winver.h>
 #include <winnt.h>
 

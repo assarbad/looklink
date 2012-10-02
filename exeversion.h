@@ -7,8 +7,7 @@
 /// (File was in the PUBLIC DOMAIN  - Author: ddkwizard.assarbad.net)
 ///////////////////////////////////////////////////////////////////////////////
 
-// $Id: exeversion.h 42 2010-01-27 00:08:56Z oliver $
-
+// 
 #ifndef __EXEVERSION_H_VERSION__
 #define __EXEVERSION_H_VERSION__ 100
 

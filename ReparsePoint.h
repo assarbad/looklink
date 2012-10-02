@@ -14,8 +14,7 @@
 
 #ifndef __REPARSEPOINT_H_VER__
 #define __REPARSEPOINT_H_VER__ 2010012623
-// $Id: ReparsePoint.h 47 2010-01-31 16:47:26Z oliver $
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+// #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif // Check for "#pragma once" support
 

@@ -9,8 +9,7 @@
 
 #ifndef __EXECOMMON_H_VERSION__
 #define __EXECOMMON_H_VERSION__ 100
-// $Id: execommon.h 42 2010-01-27 00:08:56Z oliver $
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+// #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif
 
