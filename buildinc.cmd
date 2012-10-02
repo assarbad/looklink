@@ -1,4 +1,5 @@
 @echo off
+if "%NO_INCREASE_BUILDNO%" == "1" goto :EOF
 setlocal
 set WORKPATH=%1
 if {%WORKPATH%}=={} set WORKPATH=.

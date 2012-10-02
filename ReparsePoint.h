@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// Written 2009-2010, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN
+/// Written 2009-2010, 2012, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN
 ///
 /// Original filename: ReparsePoint.h
 /// Project          : looklink
@@ -13,8 +13,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef __REPARSEPOINT_H_VER__
-#define __REPARSEPOINT_H_VER__ 2010012623
-// #if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#define __REPARSEPOINT_H_VER__ 2012100221
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif // Check for "#pragma once" support
 
@@ -241,7 +241,8 @@ class CReparsePoint
 #   include <PopPack.h>
 public:
     CReparsePoint(WCHAR const* Path)
-        : m_Path(normalizePath_(Path))
+        : m_LastError(ERROR_SUCCESS)
+        , m_Path(normalizePath_(Path))
         , m_Attr(::GetFileAttributesW(m_Path.getBuf()))
         , m_OpenFlags(FILE_FLAG_OPEN_REPARSE_POINT | ((m_Attr & FILE_ATTRIBUTE_DIRECTORY) ? FILE_FLAG_BACKUP_SEMANTICS : 0))
         , m_ReparseTag(0)
@@ -321,6 +322,38 @@ public:
         return m_ReparseGuid;
     }
 
+    inline LONG LastError() const
+    {
+        return m_LastError;
+    }
+
+    inline unsigned char* RawReparseData() const
+    {
+        return m_RawReparseData.getBuf();
+    }
+
+    inline size_t RawReparseDataLength() const
+    {
+        return m_RawReparseData.getCount();
+    }
+
+#ifdef RP_QUERY_FILE_ID
+    inline ULONGLONG FileIndex() const
+    {
+        return m_FileId.QuadPart;
+    }
+
+    inline DWORD FileIndexLow() const
+    {
+        return m_FileId.LowPart;
+    }
+
+    inline DWORD FileIndexHigh() const
+    {
+        return m_FileId.HighPart;
+    }
+#endif // RP_QUERY_FILE_ID
+
 private:
     CVerySimpleBuf<WCHAR> normalizePath_(WCHAR const* Path)
     {
@@ -328,9 +361,26 @@ private:
         {
             WCHAR const Win32Prefix[] = WIN32_UNICODE_PREFIX;
             CVerySimpleBuf<WCHAR> sPath((0 != wcsncmp(Win32Prefix, Path, wcslen(Win32Prefix))) ? Win32Prefix : L"");
-            if(sPath.getCountZ()) // Only do anything if the path doesn't have the prefix
+            if(sPath.getCountZ()) // Only do anything if the path doesn't have the prefix, yet
             {
+                // The following handles the special case where Path == "." ... any other (including "..") seem to be handled fine by GetFullPathName()
+                if(1 == wcslen(Path) && 0 == wcsncmp(L".", Path, 1))
+                {
+                    DWORD dwNeeded = ::GetCurrentDirectoryW(0, NULL);
+                    if(dwNeeded)
+                    {
+                        if(sPath.reAlloc(1 + dwNeeded + sPath.getCount()))
+                        {
+                            if(0 < ::GetCurrentDirectoryW(static_cast<DWORD>(sPath.getCount() - sPath.getCountZ()), sPath.getBuf() + sPath.getCountZ()))
+                            {
+                                return sPath;
+                            }
+                        }
+                        return Path; // fallback method
+                    }
+                }
                 LPWSTR filePart = 0;
+                // dummy call to evaluate required length
                 DWORD dwNeeded = ::GetFullPathNameW(Path, 0, sPath.getBuf(), &filePart);
                 if(sPath.reAlloc(1 + dwNeeded + wcslen(Path)))
                 {
@@ -348,60 +398,95 @@ private:
     {
         // WCHAR const Win32Prefix[] = WIN32_UNICODE_PREFIX;
         WCHAR const* NativePrefix = L"\\??\\";
-        memset(&m_ReparseGuid, 0, sizeof(m_ReparseGuid));
-        if(isReparsePoint())
+        HANDLE hFile = ::CreateFile(m_Path.getBuf(), FILE_READ_EA, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, m_OpenFlags, 0);
+        if(INVALID_HANDLE_VALUE != hFile)
         {
-            HANDLE hFile = ::CreateFile(m_Path.getBuf(), FILE_READ_EA, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, m_OpenFlags, 0);
-            if(INVALID_HANDLE_VALUE != hFile)
+            memset(&m_ReparseGuid, 0, sizeof(m_ReparseGuid));
+            if(isReparsePoint())
             {
-                CVerySimpleBuf<unsigned char> buf(MAXIMUM_REPARSE_DATA_BUFFER_SIZE + REPARSE_GUID_DATA_BUFFER_HEADER_SIZE);
+#ifdef RP_QUERY_FILE_ID
+                BY_HANDLE_FILE_INFORMATION bhfi = {0};
+                if(::GetFileInformationByHandle(hFile, &bhfi))
+                {
+                    m_FileId.HighPart = bhfi.nFileIndexHigh;
+                    m_FileId.LowPart = bhfi.nFileIndexLow;
+                }
+                else
+                {
+                    m_FileId.QuadPart = -1;
+                }
+#endif // RP_QUERY_FILE_ID
+                CVerySimpleBuf<unsigned char>& buf = m_RawReparseData;
                 ::SetLastError(ERROR_SUCCESS);
                 DWORD dwReturned = 0;
-                if(::DeviceIoControl(
-                    hFile,
-                    FSCTL_GET_REPARSE_POINT,
-                    NULL,
-                    0,
-                    buf.getBuf(),
-                    static_cast<DWORD>(buf.getByteCount()),
-                    &dwReturned,
-                    0))
+                if(buf.reAlloc(MAXIMUM_REPARSE_DATA_BUFFER_SIZE + REPARSE_GUID_DATA_BUFFER_HEADER_SIZE))
                 {
-                    PREPARSE_GUID_DATA_BUFFER const repbuf = reinterpret_cast<PREPARSE_GUID_DATA_BUFFER>(buf.getBuf());
-                    m_ReparseTag = repbuf->ReparseTag;
-                    memcpy(&m_ReparseGuid, &repbuf->ReparseGuid, sizeof(GUID));
-                    if(0 != IsReparseTagMicrosoft(m_ReparseTag))
+                    if(::DeviceIoControl(
+                        hFile,
+                        FSCTL_GET_REPARSE_POINT,
+                        NULL,
+                        0,
+                        buf.getBuf(),
+                        static_cast<DWORD>(buf.getByteCount()),
+                        &dwReturned,
+                        0))
                     {
-                        PREPARSE_DATA_BUFFER const msrepbuf = reinterpret_cast<PREPARSE_DATA_BUFFER>(repbuf);
-                        if((IO_REPARSE_TAG_SYMLINK == m_ReparseTag)
-                            && (m_PrintName.reAlloc(msrepbuf->SymbolicLinkReparseBuffer.PrintNameLength/sizeof(WCHAR)+1))
-                            && (m_SubstName.reAlloc(msrepbuf->SymbolicLinkReparseBuffer.SubstituteNameLength/sizeof(WCHAR)+1))
-                            )
+                        PREPARSE_GUID_DATA_BUFFER const repbuf = reinterpret_cast<PREPARSE_GUID_DATA_BUFFER>(buf.getBuf());
+                        m_ReparseTag = repbuf->ReparseTag;
+                        memcpy(&m_ReparseGuid, &repbuf->ReparseGuid, sizeof(GUID));
+                        if(0 != IsReparseTagMicrosoft(m_ReparseTag))
                         {
-                            memcpy(m_PrintName.getBuf(), &msrepbuf->SymbolicLinkReparseBuffer.PathBuffer[msrepbuf->SymbolicLinkReparseBuffer.PrintNameOffset/sizeof(WCHAR)], msrepbuf->SymbolicLinkReparseBuffer.PrintNameLength);
-                            memcpy(m_SubstName.getBuf(), &msrepbuf->SymbolicLinkReparseBuffer.PathBuffer[msrepbuf->SymbolicLinkReparseBuffer.SubstituteNameOffset/sizeof(WCHAR)], msrepbuf->SymbolicLinkReparseBuffer.SubstituteNameLength);
-                        }
-                        else if((IO_REPARSE_TAG_MOUNT_POINT == m_ReparseTag)
-                            && (m_PrintName.reAlloc(msrepbuf->MountPointReparseBuffer.PrintNameLength/sizeof(WCHAR)+1))
-                            && (m_SubstName.reAlloc(msrepbuf->MountPointReparseBuffer.SubstituteNameLength/sizeof(WCHAR)+1))
-                            )
-                        {
-                            memcpy(m_PrintName.getBuf(), &msrepbuf->MountPointReparseBuffer.PathBuffer[msrepbuf->MountPointReparseBuffer.PrintNameOffset/sizeof(WCHAR)], msrepbuf->MountPointReparseBuffer.PrintNameLength);
-                            memcpy(m_SubstName.getBuf(), &msrepbuf->MountPointReparseBuffer.PathBuffer[msrepbuf->MountPointReparseBuffer.SubstituteNameOffset/sizeof(WCHAR)], msrepbuf->MountPointReparseBuffer.SubstituteNameLength);
-                        }
-                        m_SubstNameCanonical = m_SubstName;
-                        // If the prefix is of the native NT form, change it to the Win32 form instead
-                        if(m_SubstNameCanonical.getCountZ() && (0 == wcsncmp(NativePrefix, m_SubstNameCanonical.getBuf(), sizeof(NativePrefix)/sizeof(NativePrefix[0])-1)))
-                        {
-                            m_SubstNameCanonical.getBuf()[1] = L'\\';
+                            PREPARSE_DATA_BUFFER const msrepbuf = reinterpret_cast<PREPARSE_DATA_BUFFER>(repbuf);
+                            if((IO_REPARSE_TAG_SYMLINK == m_ReparseTag)
+                                && (m_PrintName.reAlloc(msrepbuf->SymbolicLinkReparseBuffer.PrintNameLength/sizeof(WCHAR)+1))
+                                && (m_SubstName.reAlloc(msrepbuf->SymbolicLinkReparseBuffer.SubstituteNameLength/sizeof(WCHAR)+1))
+                                )
+                            {
+                                memcpy(m_PrintName.getBuf(), &msrepbuf->SymbolicLinkReparseBuffer.PathBuffer[msrepbuf->SymbolicLinkReparseBuffer.PrintNameOffset/sizeof(WCHAR)], msrepbuf->SymbolicLinkReparseBuffer.PrintNameLength);
+                                memcpy(m_SubstName.getBuf(), &msrepbuf->SymbolicLinkReparseBuffer.PathBuffer[msrepbuf->SymbolicLinkReparseBuffer.SubstituteNameOffset/sizeof(WCHAR)], msrepbuf->SymbolicLinkReparseBuffer.SubstituteNameLength);
+                            }
+                            else if((IO_REPARSE_TAG_MOUNT_POINT == m_ReparseTag)
+                                && (m_PrintName.reAlloc(msrepbuf->MountPointReparseBuffer.PrintNameLength/sizeof(WCHAR)+1))
+                                && (m_SubstName.reAlloc(msrepbuf->MountPointReparseBuffer.SubstituteNameLength/sizeof(WCHAR)+1))
+                                )
+                            {
+                                memcpy(m_PrintName.getBuf(), &msrepbuf->MountPointReparseBuffer.PathBuffer[msrepbuf->MountPointReparseBuffer.PrintNameOffset/sizeof(WCHAR)], msrepbuf->MountPointReparseBuffer.PrintNameLength);
+                                memcpy(m_SubstName.getBuf(), &msrepbuf->MountPointReparseBuffer.PathBuffer[msrepbuf->MountPointReparseBuffer.SubstituteNameOffset/sizeof(WCHAR)], msrepbuf->MountPointReparseBuffer.SubstituteNameLength);
+                            }
+                            m_SubstNameCanonical = m_SubstName;
+                            // If the prefix is of the native NT form, change it to the Win32 form instead
+                            if(m_SubstNameCanonical.getCountZ() && (0 == wcsncmp(NativePrefix, m_SubstNameCanonical.getBuf(), sizeof(NativePrefix)/sizeof(NativePrefix[0])-1)))
+                            {
+                                m_SubstNameCanonical.getBuf()[1] = L'\\';
+                            }
                         }
                     }
                 }
-                ::CloseHandle(hFile);
             }
+#ifdef RP_QUERY_FILE_ID
+            else
+            {
+                BY_HANDLE_FILE_INFORMATION bhfi = {0};
+                if(::GetFileInformationByHandle(hFile, &bhfi))
+                {
+                    m_FileId.HighPart = bhfi.nFileIndexHigh;
+                    m_FileId.LowPart = bhfi.nFileSizeLow;
+                }
+                else
+                {
+                    m_FileId.QuadPart = -1;
+                }
+            }
+#endif // RP_QUERY_FILE_ID
+            ::CloseHandle(hFile);
+        }
+        else
+        {
+            m_LastError = GetLastError();
         }
     }
 
+    LONG                    m_LastError;
     CVerySimpleBuf<WCHAR>   m_Path;
     CVerySimpleBuf<WCHAR>   m_SubstName;
     CVerySimpleBuf<WCHAR>   m_PrintName;
@@ -410,6 +495,10 @@ private:
     DWORD const             m_Attr;
     DWORD const             m_OpenFlags;
     DWORD                   m_ReparseTag;
+    CVerySimpleBuf<unsigned char> m_RawReparseData;
+#ifdef RP_QUERY_FILE_ID
+    ULARGE_INTEGER          m_FileId;
+#endif // RP_QUERY_FILE_ID
 };
 
 #endif // __REPARSEPOINT_H_VER__

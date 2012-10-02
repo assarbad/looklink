@@ -10,3 +10,7 @@ objchk_*
 BuildLog.htm
 buildfre_*.log
 buildchk_*.log
+*.user
+bin/*
+buildfre_*.wrn
+buildchk_*.wrn

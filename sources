@@ -1,4 +1,4 @@
-# !if $(386)
+!if $(386)
 TARGETNAME=looklink32
 !elseif $(AMD64)
 TARGETNAME=looklink64
@@ -16,6 +16,8 @@ STL_VER=70
 
 # Exception handling on stack
 USER_C_FLAGS=$(USER_C_FLAGS) /EHsc
+
+C_DEFINES=$(C_DEFINES) /DRP_QUERY_FILE_ID
 
 # Additional defines for the C/C++ preprocessor
 !IF $(UNICODE)

@@ -1,7 +1,10 @@
 @echo off
-:: setlocal
+setlocal
 :: Perform post-build steps
-if not EXIST ".\bin" md ".\bin"
-xcopy /y ".\obj%BUILD_ALT_DIR%\i386\*.exe" ".\bin"
-xcopy /y ".\obj%BUILD_ALT_DIR%\i386\*.pdb" ".\bin"
+set BINDIR=.\bin
+if not EXIST "%BINDIR%" md "%BINDIR%"
+for /d %%i in (.\obj%BUILD_ALT_DIR%\*) do @(
+  xcopy /y "%%i\*.exe" "%BINDIR%"
+  xcopy /y "%%i\*.pdb" "%BINDIR%"
+)
 endlocal
