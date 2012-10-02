@@ -1,0 +1,6 @@
+syntax: glob
+Release/*
+Debug/*
+*.ncb
+*.suo
+*.lnt
