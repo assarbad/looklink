@@ -1,5 +1,11 @@
-# $Id: sources 12 2009-02-03 01:53:51Z oliver $
+# $Id$
+!if $(386)
+TARGETNAME=looklink32
+!elseif $(AMD64)
+TARGETNAME=looklink64
+!else
 TARGETNAME=looklink
+!endif
 TARGETPATH=obj
 TARGETTYPE=PROGRAM
 UNICODE=1
