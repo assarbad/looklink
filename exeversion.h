@@ -4,10 +4,7 @@
 ///
 /// Defines for the version information in the resource file
 ///
-/// (File was in the PUBLIC DOMAIN/CC0  - Author: ddkwizard.assarbad.net)
 ///////////////////////////////////////////////////////////////////////////////
-
-// 
 #ifndef __EXEVERSION_H_VERSION__
 #define __EXEVERSION_H_VERSION__ 100
 

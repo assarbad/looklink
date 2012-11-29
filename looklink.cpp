@@ -11,8 +11,6 @@
 ///                    Windows 2000 and later.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-
-// 
 #include <cstdio>
 #ifdef _DEBUG
 #include <crtdbg.h>

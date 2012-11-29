@@ -4,7 +4,6 @@
 ///
 /// Useful macros
 ///
-/// (File was in the PUBLIC DOMAIN/CC0  - Author: ddkwizard.assarbad.net)
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef __EXECOMMON_H_VERSION__

@@ -10,8 +10,6 @@
 /// Purpose          : <see looklink.cpp>
 ///
 ///////////////////////////////////////////////////////////////////////////////
-
-// 
 #ifndef __LOOKLINK_H_VERSION__
 #define __LOOKLINK_H_VERSION__ 100
 
