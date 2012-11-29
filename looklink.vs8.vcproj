@@ -5,7 +5,6 @@
 	Name="looklink"
 	ProjectGUID="{BB5CC837-5B2C-4511-9BEC-83FF981C9295}"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="0"
 	>
 	<Platforms>
 		<Platform
@@ -85,6 +84,9 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -157,6 +159,9 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -195,6 +200,10 @@
 			</File>
 			<File
 				RelativePath=".\ReparsePoint.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VerySimpleBuf.h"
 				>
 			</File>
 		</Filter>

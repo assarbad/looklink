@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
+				PreprocessorDefinitions="RP_QUERY_FILE_ID;WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -195,6 +195,10 @@
 			</File>
 			<File
 				RelativePath=".\ReparsePoint.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VerySimpleBuf.h"
 				>
 			</File>
 		</Filter>

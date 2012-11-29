@@ -413,7 +413,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\common\SimpleBuffer.h"
+				RelativePath=".\VerySimpleBuf.h"
 				>
 			</File>
 		</Filter>
