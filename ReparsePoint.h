@@ -42,7 +42,17 @@
 
 class CReparsePoint
 {
+    // Allow the header to be included again outside of this file
+    // Still this header needs to be included before anyone else who requires VerySimpleBuf.h
+#   define __VERYSIMPLEBUF_MULTI_INC__
 #   include "VerySimpleBuf.h"
+#   undef __VERYSIMPLEBUF_H_VER__
+    // Just make it more readable
+    typedef CVerySimpleBuf<WCHAR> CWideString, *PWideString;
+    typedef CVerySimpleBuf<CHAR>  CAnsiString, *PAnsiString;
+    typedef CVerySimpleBuf<TCHAR> CTString, *PTString;
+    typedef CVerySimpleBuf<BYTE>  ByteBuf;
+
 #   include <PshPack1.h>
     // The Microsoft version of the reparse data, as opposed to REPARSE_GUID_DATA_BUFFER
     typedef struct _REPARSE_DATA_BUFFER
