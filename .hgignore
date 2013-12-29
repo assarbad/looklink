@@ -15,3 +15,5 @@ bin/*
 buildfre_*.wrn
 buildchk_*.wrn
 intermediate/**
+looklink.zip
+looklink.zip.asc
