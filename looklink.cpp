@@ -34,6 +34,41 @@ BOOL isCommandLineSwitch(_TCHAR *arg, const _TCHAR *switchName = NULL)
     return FALSE;
 }
 
+LPCTSTR getReparseType(const CReparsePoint& rp)
+{
+    if(!rp.isReparsePoint())
+        return _T("");
+    switch(rp.ReparseTag())
+    {
+    case IO_REPARSE_TAG_MOUNT_POINT:
+        return _T("volume mount point");
+    case IO_REPARSE_TAG_HSM:
+        return _T("HSM reparse point");
+    case IO_REPARSE_TAG_HSM2:
+        return _T("HSM2 reparse point");
+    case IO_REPARSE_TAG_SIS:
+        return _T("SIS reparse point");
+    case IO_REPARSE_TAG_WIM:
+        return _T("WIM reparse point");
+    case IO_REPARSE_TAG_CSV:
+        return _T("CSV reparse point");
+    case IO_REPARSE_TAG_DFS:
+        return _T("DFS reparse point");
+    case IO_REPARSE_TAG_SYMLINK:
+        return _T("symbolic link");
+    case IO_REPARSE_TAG_DFSR:
+        return _T("DFSR reparse point");
+    case IO_REPARSE_TAG_DEDUP:
+        return _T("DEDUP reparse point");
+    case IO_REPARSE_TAG_NFS:
+        return _T("NFS reparse point");
+    case IO_REPARSE_TAG_FILE_PLACEHOLDER:
+        return _T("placeholder file");
+    default:
+        return _T("reparse point");
+    }
+}
+
 int __cdecl _tmain(int argc, _TCHAR *argv[])
 {
 #ifdef _DEBUG
@@ -41,7 +76,7 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
 #endif // _DEBUG
     if(2 <= argc)
     {
-        bool show_logo = true, be_verbose = false;
+        bool show_logo = true, be_verbose = false, noerror = false;
         int fname_arg = 1;
         while(isCommandLineSwitch(argv[fname_arg]))
         {
@@ -50,6 +85,9 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
             else
                 if(isCommandLineSwitch(argv[fname_arg], L"verbose"))
                     be_verbose = true;
+                else
+                    if(isCommandLineSwitch(argv[fname_arg], L"noerror"))
+                        noerror = true;
             fname_arg++;
         }
 
@@ -69,7 +107,7 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
             _tprintf(_T("'%ws' is a %sMicrosoft %s (virt == %d)\n"),
                 rp.Path(),
                 ((rp.isMicrosoftTag()) ? _T("") : _T("non-")),
-                ((rp.isSymbolicLink()) ? _T("symbolic link") : ((rp.isVolumeMountPoint()) ? _T("volume mount point") : _T("junction point"))),
+                getReparseType(rp),
                 rp.isVirtual()
                 );
             if(be_verbose)
@@ -79,7 +117,7 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
                     _tprintf(_T("\tFile Index: %I64u (%08X%08X)\n"), rp.FileIndex(), rp.FileIndexHigh(), rp.FileIndexLow());
                 }
             }
-            if(rp.isMicrosoftTag())
+            if(rp.isNameSurrogate())
             {
                 _tprintf(_T("\tPrint name: %ws\n"), rp.PrintName());
                 _tprintf(_T("\tSubst name: %ws\n"), rp.SubstName());
@@ -108,7 +146,10 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
         }
         else
         {
-            _ftprintf(stderr, _T("ERROR: '%ws' is not a reparse point\n"), rp.Path());
+            if(!noerror) // show no errors if asked not to
+            {
+                _ftprintf(stderr, _T("ERROR: '%ws' is not a reparse point\n"), rp.Path());
+            }
             if(be_verbose)
             {
                 if(-1 != rp.FileIndex())
@@ -122,7 +163,7 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
     }
     else
     {
-        _ftprintf(stderr, _T("Syntax: looklink [--nologo] [--verbose] <path>\n"));
+        _ftprintf(stderr, _T("Syntax: looklink [--nologo] [--verbose] [--quiet] <path>\n"));
     }
     return 1;
 }

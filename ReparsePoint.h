@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// Written 2009-2010, 2012, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN/CC0
+/// Written 2009-2013, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN/CC0
 ///
 /// Original filename: ReparsePoint.h
 /// Project          : looklink
@@ -22,17 +22,53 @@
 #include <Windows.h>
 #include <WinIoCtl.h>
 
+#ifndef IO_REPARSE_TAG_MOUNT_POINT
+#define IO_REPARSE_TAG_MOUNT_POINT              (0xA0000003L)
+#endif // IO_REPARSE_TAG_MOUNT_POINT
+
+#ifndef IO_REPARSE_TAG_HSM
+#define IO_REPARSE_TAG_HSM                      (0xC0000004L)
+#endif // IO_REPARSE_TAG_HSM
+
+#ifndef IO_REPARSE_TAG_HSM2
+#define IO_REPARSE_TAG_HSM2                     (0x80000006L)
+#endif // IO_REPARSE_TAG_HSM2
+
+#ifndef IO_REPARSE_TAG_SIS
+#define IO_REPARSE_TAG_SIS                      (0x80000007L)
+#endif // IO_REPARSE_TAG_SIS
+
+#ifndef IO_REPARSE_TAG_WIM
+#define IO_REPARSE_TAG_WIM                      (0x80000008L)
+#endif // IO_REPARSE_TAG_WIM
+
+#ifndef IO_REPARSE_TAG_CSV
+#define IO_REPARSE_TAG_CSV                      (0x80000009L)
+#endif // IO_REPARSE_TAG_CSV
+
 #ifndef IO_REPARSE_TAG_DFS
-#define IO_REPARSE_TAG_DFS                      (0x8000000AL)       
+#define IO_REPARSE_TAG_DFS                      (0x8000000AL)
 #endif // IO_REPARSE_TAG_DFS
 
 #ifndef IO_REPARSE_TAG_SYMLINK
-#define IO_REPARSE_TAG_SYMLINK                  (0xA000000CL)       
+#define IO_REPARSE_TAG_SYMLINK                  (0xA000000CL)
 #endif // IO_REPARSE_TAG_SYMLINK
 
 #ifndef IO_REPARSE_TAG_DFSR
-#define IO_REPARSE_TAG_DFSR                     (0x80000012L)       
+#define IO_REPARSE_TAG_DFSR                     (0x80000012L)
 #endif // IO_REPARSE_TAG_DFSR
+
+#ifndef IO_REPARSE_TAG_DEDUP
+#define IO_REPARSE_TAG_DEDUP                    (0x80000013L)
+#endif // IO_REPARSE_TAG_DEDUP
+
+#ifndef IO_REPARSE_TAG_NFS
+#define IO_REPARSE_TAG_NFS                      (0x80000014L)
+#endif // IO_REPARSE_TAG_NFS
+
+#ifndef IO_REPARSE_TAG_FILE_PLACEHOLDER
+#define IO_REPARSE_TAG_FILE_PLACEHOLDER         (0x80000015L)
+#endif // IO_REPARSE_TAG_FILE_PLACEHOLDER
 
 #ifndef FILE_ATTRIBUTE_VIRTUAL
 #define FILE_ATTRIBUTE_VIRTUAL                  0x00010000  
@@ -112,7 +148,12 @@ public:
         return (0 != (m_Attr & FILE_ATTRIBUTE_VIRTUAL));
     }
 
-    inline bool isSymbolicLink() const // Vista++ symlink
+    inline bool isSymbolicLink() const // Windows Vista++ symlink
+    {
+        return (IO_REPARSE_TAG_SYMLINK == m_ReparseTag);
+    }
+
+    inline bool isPlaceHolderFile() const // Windows 8.1++ placeholder file (SkyDrive)
     {
         return (IO_REPARSE_TAG_SYMLINK == m_ReparseTag);
     }
@@ -137,6 +178,11 @@ public:
     inline bool isMicrosoftTag() const
     {
         return 0 != IsReparseTagMicrosoft(m_ReparseTag);
+    }
+
+    inline bool isNameSurrogate() const
+    {
+        return 0 != IsReparseTagNameSurrogate(m_ReparseTag);
     }
 
     WCHAR const* Path() const
