@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef __REPARSEPOINT_H_VER__
-#define __REPARSEPOINT_H_VER__ 2012112923
+#define __REPARSEPOINT_H_VER__ 2013122900
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif // Check for "#pragma once" support
@@ -306,7 +306,7 @@ private:
                 }
                 else
                 {
-                    m_FileId.QuadPart = -1;
+                    m_FileId.QuadPart = ((ULONGLONG)-1);
                 }
 #endif // RP_QUERY_FILE_ID
                 CVerySimpleBuf<unsigned char>& buf = m_RawReparseData;
@@ -367,7 +367,7 @@ private:
                 }
                 else
                 {
-                    m_FileId.QuadPart = -1;
+                    m_FileId.QuadPart = ((ULONGLONG)-1);
                 }
             }
 #endif // RP_QUERY_FILE_ID
@@ -392,6 +392,9 @@ private:
 #ifdef RP_QUERY_FILE_ID
     ULARGE_INTEGER          m_FileId;
 #endif // RP_QUERY_FILE_ID
+    // Hide these
+    CReparsePoint();
+    CReparsePoint& operator=(const CReparsePoint&);
 };
 
 #endif // __REPARSEPOINT_H_VER__

@@ -11,7 +11,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef __LOOKLINK_H_VERSION__
-#define __LOOKLINK_H_VERSION__ 100
+#define __LOOKLINK_H_VERSION__ 2013122900
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// Written 2009-2010, 2012, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN/CC0
+/// Written 2009-2013, Oliver Schneider (assarbad.net) - PUBLIC DOMAIN/CC0
 ///
 /// Original filename: looklink.cpp
 /// Project          : looklink
@@ -112,10 +112,12 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
                 );
             if(be_verbose)
             {
+#ifdef RP_QUERY_FILE_ID
                 if(-1 != rp.FileIndex())
                 {
                     _tprintf(_T("\tFile Index: %I64u (%08X%08X)\n"), rp.FileIndex(), rp.FileIndexHigh(), rp.FileIndexLow());
                 }
+#endif // RP_QUERY_FILE_ID
             }
             if(rp.isNameSurrogate())
             {
@@ -152,10 +154,12 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
             }
             if(be_verbose)
             {
+#ifdef RP_QUERY_FILE_ID
                 if(-1 != rp.FileIndex())
                 {
                     _ftprintf(stderr, _T("\tFile Index: %I64u (%08X%08X)\n"), rp.FileIndex(), rp.FileIndexHigh(), rp.FileIndexLow());
                 }
+#endif // RP_QUERY_FILE_ID
             }
             return 2;
         }
@@ -163,7 +167,7 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
     }
     else
     {
-        _ftprintf(stderr, _T("Syntax: looklink [--nologo] [--verbose] [--quiet] <path>\n"));
+        _ftprintf(stderr, _T("Syntax: looklink [--nologo] [--verbose] [--noerror] <path>\n"));
     }
     return 1;
 }
