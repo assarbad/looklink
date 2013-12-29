@@ -18,9 +18,9 @@ from the command line.
 Installation
 ------------
 No installation required. Download the binaries (32 and 64bit) from
-`my website`_. Use an archiver to unpack the archive, I recommend 7zip,
-and then place the ``.exe`` files into a folder listed in your ``PATH``
-environment variable.
+`my website`_ or `Bitbucket`_. Use an archiver to unpack the archive,
+I recommend `7-Zip`_, and then place the ``.exe`` files into a folder
+listed in your ``PATH`` environment variable.
 
 As for the utility class all you need is to place the files
 ``ReparsePoint.h`` and ``VerySimpleBuf.h`` into your project,
@@ -74,3 +74,5 @@ The tools and the classes are placed into the PUBLIC DOMAIN (CC0).
 
 .. _my website: https://assarbad.net/stuff/looklink.zip
 .. _premake4: https://bitbucket.org/windirstat/windirstat/src/tip/common/premake4.exe
+.. _Bitbucket: https://bitbucket.org/assarbad/looklink/downloads
+.. _7-Zip: http://7-zip.org/
