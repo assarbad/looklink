@@ -71,12 +71,11 @@ solution ("looklink")
         language        ("C++")
         kind            ("ConsoleApp")
         flags           {"StaticRuntime", "Unicode", "NativeWChar", "ExtraWarnings", "NoRTTI", "WinMain", "NoMinimalRebuild"}
-        defines         {"WINVER=0x0500"}
+        defines         ("WINVER=0x0500", "RP_QUERY_FILE_ID", "_CONSOLE", "WIN32")
         targetdir       ("bin")
         objdir          (int_dir)
         libdirs         {"$(IntDir)"}
         resoptions      {"/nologo", "/l409"}
-        defines         ("RP_QUERY_FILE_ID", "_CONSOLE", "WIN32")
 
         files
         {
@@ -91,7 +90,6 @@ solution ("looklink")
         {
             ["Header Files/*"] = { "*.h" },
             ["Source Files/*"] = { "*.cpp" },
-            ["Resource Files/*"] = { "*.rc" },
             ["Resource Files/*"] = { "*.rc" },
             ["*"] = { "premake4.lua", "*.rst", "*.txt", },
         }
