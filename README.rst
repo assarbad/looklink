@@ -36,7 +36,7 @@ to match the path to the installed DDK.
 
 If you prefer to use Visual Studio, a solution/project for Visual Studio
 2005 is included and you can generate any of the other supported projects
-yourself using the ``premake4_`` that comes with the WinDirStat source code.
+yourself using the `premake4`_ that comes with the WinDirStat source code.
 Use a tool such as ``sigcheck`` to verify the code signature on it, though.
 
 The way you generate the projects is by calling ``premake4`` one of the
