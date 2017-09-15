@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef __REPARSEPOINT_H_VER__
-#define __REPARSEPOINT_H_VER__ 2013122900
+#define __REPARSEPOINT_H_VER__ 2017091421
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif // Check for "#pragma once" support
@@ -22,67 +22,18 @@
 #include <Windows.h>
 #include <WinIoCtl.h>
 
-#ifndef IO_REPARSE_TAG_MOUNT_POINT
-#define IO_REPARSE_TAG_MOUNT_POINT              (0xA0000003L)
-#endif // IO_REPARSE_TAG_MOUNT_POINT
-
-#ifndef IO_REPARSE_TAG_HSM
-#define IO_REPARSE_TAG_HSM                      (0xC0000004L)
-#endif // IO_REPARSE_TAG_HSM
-
-#ifndef IO_REPARSE_TAG_HSM2
-#define IO_REPARSE_TAG_HSM2                     (0x80000006L)
-#endif // IO_REPARSE_TAG_HSM2
-
-#ifndef IO_REPARSE_TAG_SIS
-#define IO_REPARSE_TAG_SIS                      (0x80000007L)
-#endif // IO_REPARSE_TAG_SIS
-
-#ifndef IO_REPARSE_TAG_WIM
-#define IO_REPARSE_TAG_WIM                      (0x80000008L)
-#endif // IO_REPARSE_TAG_WIM
-
-#ifndef IO_REPARSE_TAG_CSV
-#define IO_REPARSE_TAG_CSV                      (0x80000009L)
-#endif // IO_REPARSE_TAG_CSV
-
-#ifndef IO_REPARSE_TAG_DFS
-#define IO_REPARSE_TAG_DFS                      (0x8000000AL)
-#endif // IO_REPARSE_TAG_DFS
-
-#ifndef IO_REPARSE_TAG_SYMLINK
-#define IO_REPARSE_TAG_SYMLINK                  (0xA000000CL)
-#endif // IO_REPARSE_TAG_SYMLINK
-
-#ifndef IO_REPARSE_TAG_DFSR
-#define IO_REPARSE_TAG_DFSR                     (0x80000012L)
-#endif // IO_REPARSE_TAG_DFSR
-
-#ifndef IO_REPARSE_TAG_DEDUP
-#define IO_REPARSE_TAG_DEDUP                    (0x80000013L)
-#endif // IO_REPARSE_TAG_DEDUP
-
-#ifndef IO_REPARSE_TAG_NFS
-#define IO_REPARSE_TAG_NFS                      (0x80000014L)
-#endif // IO_REPARSE_TAG_NFS
-
-#ifndef IO_REPARSE_TAG_FILE_PLACEHOLDER
-#define IO_REPARSE_TAG_FILE_PLACEHOLDER         (0x80000015L)
-#endif // IO_REPARSE_TAG_FILE_PLACEHOLDER
-
-#ifndef FILE_ATTRIBUTE_VIRTUAL
-#define FILE_ATTRIBUTE_VIRTUAL                  0x00010000  
-#endif // FILE_ATTRIBUTE_VIRTUAL
+#include "ReparseTags.h"
+#include "FileAttributes.h"
 
 #define WIN32_UNICODE_PREFIX                    L"\\\\?\\"
 
 class CReparsePoint
 {
-    // Allow the header to be included again outside of this file
-    // Still this header needs to be included before anyone else who requires VerySimpleBuf.h
+    // Allow the header to be included again outside of this file (and class)
+    // Still this header needs to be included before anyone else who requires VerySimpleBuf.hpp
 #   define __VERYSIMPLEBUF_MULTI_INC__
-#   include "VerySimpleBuf.h"
-#   undef __VERYSIMPLEBUF_H_VER__
+#   include "VerySimpleBuf.hpp"
+#   undef __VERYSIMPLEBUF_HPP_VER__
     // Just make it more readable
     typedef CVerySimpleBuf<WCHAR> CWideString, *PWideString;
     typedef CVerySimpleBuf<CHAR>  CAnsiString, *PAnsiString;

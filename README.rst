@@ -5,39 +5,31 @@
 
 About
 -----
-``CReparsePoint`` is a C++ utility class without dependencies to the
-STL, MFC, ATL or some such. It allows you to retrieve all the data
-stored inside reparse points, the mechanism underlying junction points
-since Windows 2000 and symbolic links (both for files and directories)
-since Windows Vista. It also supports placeholder files on Windows 8.1
-and later.
+``CReparsePoint`` is a C++ utility class without dependencies to the STL, MFC,
+ATL or some such. It allows you to retrieve all the data stored inside reparse
+points, the mechanism underlying junction points since Windows 2000 and symbolic
+links (both for files and directories) since Windows Vista. It also supports
+placeholder files on Windows 8.1 and later.
 
-``looklink`` is a simple tool to investigate reparse point properties
-from the command line.
+``looklink`` is a simple tool to investigate reparse point properties from the
+command line.
 
 Installation
 ------------
-No installation required. Download the binaries (32 and 64bit) from
-`my website`_ or `Bitbucket`_. Use an archiver to unpack the archive,
-I recommend `7-Zip`_, and then place the ``.exe`` files into a folder
-listed in your ``PATH`` environment variable.
+No installation required. Download the binaries (32 and 64bit) from `Bitbucket`_.
+Use an archiver to unpack the archive, I recommend `7-Zip`_, and then place the
+``.exe`` files into a folder listed in your ``PATH`` environment variable.
 
-As for the utility class all you need is to place the files
-``ReparsePoint.h`` and ``VerySimpleBuf.h`` into your project,
-``#include`` the former and you should be set to use ``CReparsePoint``.
+As for the utility class all you need is to place the files ``ReparsePoint.h``
+and ``VerySimpleBuf.h`` into your project, ``#include`` the former and you
+should be set to use ``CReparsePoint``.
 
 Build instructions
 ------------------
-In order to build the tool yourself, you'll either need the Windows 2003
-Server DDK or Visual Studio. If you use the DDK, you can simply rely on
-the ``relbuild.cmd`` script, but you may have to set the ``WNETBASE``
-environment variable to a sensible value (e.g. ``WNETBASE=C:\WINDDK\3790.1830``)
-to match the path to the installed DDK.
-
-If you prefer to use Visual Studio, a solution/project for Visual Studio
-2005 is included and you can generate any of the other supported projects
-yourself using the `premake4`_ that comes with the WinDirStat source code.
-Use a tool such as ``sigcheck`` to verify the code signature on it, though.
+If you prefer to use Visual Studio, a solution/project for Visual Studio 2005 is
+included and you can generate any of the other supported projects yourself using
+the `premake4`_ that comes with the WinDirStat source code. Use a tool such as
+``sigcheck`` to verify the code signature on it, though.
 
 The way you generate the projects is by calling ``premake4`` one of the
 following ways::
@@ -47,13 +39,29 @@ following ways::
     premake4 vs2010
     premake4 vs2012
     premake4 vs2013
+    premake4 vs2015
+    premake4 vs2017
 
 The earlier Visual Studio versions may work, but no guarantees.
 
+My prepared premake4.lua can take a number of arguments. Most notably it'll take
+
+  * ``--xp`` to generate XP-compatible projects on newer VS versions.
+  * ``--msvcrt`` to use the ``msvcrt.dll`` import Windows Vista WDK which makes
+    the resulting binary statically import ``msvcrt.dll``, but in the version
+    backwards compatible until Windows 2000 (and 2003 for x64).
+    In order to make use of this, you have to set the environment variable
+    ``WLHBASE`` to point to your WDK (e.g. ``WLHBASE=C:\WINDDK\6001.18002``).
+  * ``--release`` will generate the release solution (no ``Debug`` configuration)
+    and is used by the ``relbuild.cmd`` script. This option implies ``--xp`` and
+    ``--msvcrt`` at the time of this writing.
+
 Requirements
 ------------
-The program should run on Windows 2000 and later. Itanium CPUs are not
-supported, but feel free to build that yourself, if needed.
+The program should run on Windows 2000 and later for x86-32, and on Windows 2003
+and later for x86-64, aka x64 (this includes Windows XP x64, which used the same
+code base as Windows 2003 Server). Itanium CPUs are not supported, but feel free
+to build that yourself, if needed.
 
 The ``CReparsePoint`` class should work starting on Windows 2000, too.
 
@@ -70,9 +78,12 @@ Syntax::
 
 License
 -------
-The tools and the classes are placed into the PUBLIC DOMAIN/CC0.
+The tool and the classes are placed into the PUBLIC DOMAIN/CC0, with the
+exception of CVersionInfo (inside ``VersionInfo.hpp``), which is licensed under
+the very liberal MIT license. Licensing information can usually be found at the
+top of each source file. Anything not explicitly licensed in the source file can
+be assumed to have been placed into the PUBLIC DOMAIN/CC0.
 
-.. _my website: https://assarbad.net/stuff/looklink.zip
-.. _premake4: https://bitbucket.org/windirstat/windirstat/src/tip/common/premake4.exe
-.. _Bitbucket: https://bitbucket.org/assarbad/looklink/downloads
+.. _premake4: https://bitbucket.org/windirstat/premake-stable/downloads/
+.. _Bitbucket: https://bitbucket.org/assarbad/looklink/downloads/
 .. _7-Zip: http://7-zip.org/

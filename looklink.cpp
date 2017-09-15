@@ -17,21 +17,32 @@
 #endif // _DEBUG
 #include <tchar.h>
 #include "looklink.h"
+#include "VersionInfo.hpp"
 
-BOOL isCommandLineSwitch(_TCHAR *arg, const _TCHAR *switchName = NULL)
-{
-    if(arg && wcslen(arg) > 2 && arg[0] == L'-' && arg[1] == L'-')
+namespace {
+    BOOL isCommandLineSwitch(_TCHAR *arg, const _TCHAR *switchName = NULL)
     {
-        if(!switchName)
+        if(arg && wcslen(arg) > 2 && arg[0] == L'-' && arg[1] == L'-')
         {
-            return TRUE;
+            if(!switchName)
+            {
+                return TRUE;
+            }
+            if(0 == wcscmp(&arg[2], switchName))
+            {
+                return TRUE;
+            }
         }
-        if(0 == wcscmp(&arg[2], switchName))
-        {
-            return TRUE;
-        }
+        return FALSE;
     }
-    return FALSE;
+
+    HMODULE GetInstanceHandle()
+    {
+        MEMORY_BASIC_INFORMATION mbi;
+        static int iDummy;
+        ::VirtualQuery(&iDummy, &mbi, sizeof(mbi));
+        return HMODULE(mbi.AllocationBase);
+    }
 }
 
 LPCTSTR getReparseType(const CReparsePoint& rp)
@@ -93,7 +104,18 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
 
         if(show_logo)
         {
-            _tprintf(_T("looklink %1d.%1d/%03d - written %hs, Oliver Schneider (assarbad.net)\n\n"), PRD_MAJVER, PRD_MINVER, FILE_BUILD, ANSISTRING(EXE_YEAR));
+            CVersionInfo verinfo(GetInstanceHandle());
+            _tprintf(_T("%s %s written by %s\n")
+                , verinfo[_T("OriginalFilename")]
+            , verinfo[_T("FileVersion")]
+            , verinfo[_T("CompanyName")]
+            );
+#ifdef HG_REV_ID
+            _tprintf(_T("\tRevision: %s\n")
+                , verinfo[_T("Mercurial revision")]
+            );
+#endif
+            _tprintf(_T("\n"));
         }
 
         CReparsePoint rp(argv[fname_arg]);
@@ -167,7 +189,7 @@ int __cdecl _tmain(int argc, _TCHAR *argv[])
     }
     else
     {
-        _ftprintf(stderr, _T("Syntax: looklink [--nologo] [--verbose] [--noerror] <path>\n"));
+        _ftprintf(stderr, _T("Syntax:\n\tlooklink [--nologo] [--verbose] [--noerror] <path>\n"));
     }
     return 1;
 }
