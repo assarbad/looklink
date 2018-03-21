@@ -25,3 +25,4 @@ looklink_release/**
 buildlog.html
 *.7z
 *.7z.asc
+.vs/**

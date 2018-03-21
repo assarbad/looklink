@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{A6836531-6AB7-E927-8562-95287D10E245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{09F27778-75FB-8328-410A-338149B2B1AE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{8CE2EF98-27EC-07CC-A314-E692331F4E15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Special Files">
+      <UniqueIdentifier>{AAABEBE2-24F4-7939-4B08-85DCF0F78BF7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="hgid.cmd">
+      <Filter>Special Files</Filter>
+    </None>
+    <None Include="relbuild.cmd">
+      <Filter>Special Files</Filter>
+    </None>
+    <None Include="setvcvars.cmd">
+      <Filter>Special Files</Filter>
+    </None>
+    <None Include="README.rst">
+      <Filter>Special Files</Filter>
+    </None>
+    <None Include="premake4.lua">
+      <Filter>Special Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="exeversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileAttributes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="looklink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReparseTags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReparsePoint.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionInfo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VerySimpleBuf.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="looklink.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="exeversion.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
