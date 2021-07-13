@@ -36,7 +36,7 @@
 #define TEXT_MODULE            looklink // module name
 #define TEXT_COPYRIGHT         Written EXE_YEAR by TEXT_COMPANY (PUBLIC DOMAIN/CC0)
 #define TEXT_INTERNALNAME      looklink.exe
-#define HG_REPOSITORY          "https://bitbucket.org/assarbad/looklink"
+#define HG_REPOSITORY          "https://hg.code.sf.net/p/looklink/code"
 
 
 #define _ANSISTRING(text) #text
