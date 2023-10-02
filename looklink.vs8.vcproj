@@ -27,7 +27,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="&quot;$(ProjectDir)\hgid.cmd&quot;"
+				CommandLine="call &quot;$(ProjectDir)\hgid.cmd&quot;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -112,7 +112,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="&quot;$(ProjectDir)\hgid.cmd&quot;"
+				CommandLine="call &quot;$(ProjectDir)\hgid.cmd&quot;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -198,7 +198,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="&quot;$(ProjectDir)\hgid.cmd&quot;"
+				CommandLine="call &quot;$(ProjectDir)\hgid.cmd&quot;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -285,7 +285,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="&quot;$(ProjectDir)\hgid.cmd&quot;"
+				CommandLine="call &quot;$(ProjectDir)\hgid.cmd&quot;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
