@@ -142,18 +142,19 @@ int __cdecl _tmain(int argc, _TCHAR* argv[])
                 {
                     _tprintf(_T("\tTag       : %08X\n"), rp.ReparseTag());
                 }
+                GUID const& rpguid = rp.ReparseGuid();
                 _tprintf(_T("\tGUID      : {%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}\n"),
-                         rp.ReparseGuid().Data1,
-                         rp.ReparseGuid().Data2,
-                         rp.ReparseGuid().Data3,
-                         rp.ReparseGuid().Data4[0],
-                         rp.ReparseGuid().Data4[1],
-                         rp.ReparseGuid().Data4[2],
-                         rp.ReparseGuid().Data4[3],
-                         rp.ReparseGuid().Data4[4],
-                         rp.ReparseGuid().Data4[5],
-                         rp.ReparseGuid().Data4[6],
-                         rp.ReparseGuid().Data4[7]);
+                         rpguid.Data1,
+                         rpguid.Data2,
+                         rpguid.Data3,
+                         rpguid.Data4[0],
+                         rpguid.Data4[1],
+                         rpguid.Data4[2],
+                         rpguid.Data4[3],
+                         rpguid.Data4[4],
+                         rpguid.Data4[5],
+                         rpguid.Data4[6],
+                         rpguid.Data4[7]);
             }
         }
         else

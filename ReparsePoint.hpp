@@ -115,7 +115,7 @@ class CReparsePoint
 
     inline bool isPlaceHolderFile() const // Windows 8.1++ placeholder file (SkyDrive)
     {
-        return (IO_REPARSE_TAG_SYMLINK == m_ReparseTag);
+        return (IO_REPARSE_TAG_FILE_PLACEHOLDER == m_ReparseTag);
     }
 
     inline bool isJunctionPoint() const
@@ -222,9 +222,10 @@ class CReparsePoint
                     DWORD dwNeeded = ::GetCurrentDirectoryW(0, NULL);
                     if (dwNeeded)
                     {
-                        if (sPath.reAlloc((size_t)1 + dwNeeded + sPath.getCount()))
+                        if (sPath.reAlloc((size_t)1 + dwNeeded + sPath.getCount())) //-V104
                         {
-                            if (0 < ::GetCurrentDirectoryW(static_cast<DWORD>(sPath.getCount() - sPath.getCountZ()), sPath.getBuf() + sPath.getCountZ()))
+                            if (0 <
+                                ::GetCurrentDirectoryW(static_cast<DWORD>(sPath.getCount() - sPath.getCountZ()), sPath.getBuf() + sPath.getCountZ())) //-V202
                             {
                                 return sPath;
                             }
@@ -235,9 +236,10 @@ class CReparsePoint
                 LPWSTR filePart = 0;
                 // dummy call to evaluate required length
                 DWORD dwNeeded = ::GetFullPathNameW(Path, 0, sPath.getBuf(), &filePart);
-                if (sPath.reAlloc((size_t)1 + dwNeeded + wcslen(Path)))
+                if (sPath.reAlloc((size_t)1 + dwNeeded + wcslen(Path))) //-V104
                 {
-                    if (0 < ::GetFullPathNameW(Path, static_cast<DWORD>(sPath.getCount() - sPath.getCountZ()), sPath.getBuf() + sPath.getCountZ(), &filePart))
+                    if (0 < ::GetFullPathNameW(
+                                Path, static_cast<DWORD>(sPath.getCount() - sPath.getCountZ()), sPath.getBuf() + sPath.getCountZ(), &filePart)) //-V202
                     {
                         return sPath;
                     }
@@ -272,9 +274,10 @@ class CReparsePoint
                 CVerySimpleBuf<unsigned char>& buf = m_RawReparseData;
                 ::SetLastError(ERROR_SUCCESS);
                 DWORD dwReturned = 0;
-                if (buf.reAlloc(MAXIMUM_REPARSE_DATA_BUFFER_SIZE + REPARSE_GUID_DATA_BUFFER_HEADER_SIZE))
+                if (buf.reAlloc(MAXIMUM_REPARSE_DATA_BUFFER_SIZE + REPARSE_GUID_DATA_BUFFER_HEADER_SIZE)) //-V202 //-V221 //-V106
                 {
-                    if (::DeviceIoControl(hFile, FSCTL_GET_REPARSE_POINT, NULL, 0, buf.getBuf(), static_cast<DWORD>(buf.getByteCount()), &dwReturned, 0))
+                    if (::DeviceIoControl(
+                            hFile, FSCTL_GET_REPARSE_POINT, NULL, 0, buf.getBuf(), static_cast<DWORD>(buf.getByteCount()), &dwReturned, 0)) //-V202
                     {
                         PREPARSE_GUID_DATA_BUFFER const repbuf = reinterpret_cast<PREPARSE_GUID_DATA_BUFFER>(buf.getBuf());
                         m_ReparseTag = repbuf->ReparseTag;
@@ -344,7 +347,11 @@ class CReparsePoint
     CVerySimpleBuf<WCHAR> m_SubstName;
     CVerySimpleBuf<WCHAR> m_PrintName;
     CVerySimpleBuf<WCHAR> m_SubstNameCanonical;
+#ifdef _MSVC_LANG
+    GUID m_ReparseGuid{};
+#else
     GUID m_ReparseGuid;
+#endif // _MSVC_LANG
     DWORD const m_Attr;
     DWORD const m_OpenFlags;
     DWORD m_ReparseTag;
@@ -353,8 +360,13 @@ class CReparsePoint
     ULARGE_INTEGER m_FileId;
 #endif // RP_QUERY_FILE_ID
     // Hide these
+#ifdef _MSVC_LANG
+    CReparsePoint() = delete;
+    CReparsePoint& operator=(const CReparsePoint&) = delete;
+#else
     CReparsePoint();
     CReparsePoint& operator=(const CReparsePoint&);
+#endif // _MSVC_LANG
 };
 
 #endif // __REPARSEPOINT_H_VER__
