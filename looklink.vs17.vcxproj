@@ -187,6 +187,9 @@
     <None Include="setvcvars.cmd" />
     <None Include="README.rst" />
     <None Include="premake4.lua" />
+    <None Include="Directory.Build.props" />
+    <None Include="project.early.props" />
+    <None Include="project.late.props" />
     <None Include=".editorconfig" />
     <None Include=".clang-format" />
     <None Include=".gitignore" />
